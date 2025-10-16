@@ -14,4 +14,14 @@ public class TodoForm {
 
     @FutureOrPresent(message = "Due date cannot be in the past")
     private LocalDate dueDate;
+
+    // getters and setters
+    public void setTitle(String title) { this.title = title; }
+    public String getTitle() { return title; }
+
+    public void setDescription(String description) { this.description = description; }
+    public String getDescription() { return description; }
+
+    public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
+    public LocalDate getDueDate() { return dueDate; }
 }
