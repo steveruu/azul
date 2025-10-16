@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 // DbContext v .NET?
 // Direct database access - tohle uz je ta nejnizsi vrstva k DB
+// rozdil oproti service: filtering tady dela DB + SQL - v service filtering dělá Java
 public interface TodoRepository extends JpaRepository<Todo, Long> {
     // extenduje JpaRepository
 

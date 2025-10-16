@@ -3,10 +3,11 @@ package cz.stvr.azul.model;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity // attribute [Table] v C#
-@Table(name = "todos")
+// hibernate implementace v Spring Bootu (JPA)
+@Entity
+@Table(name = "todos") // optional
 public class Todo {
-    @Id // PK
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-increment (pro H2 ?)
     private Long id;
 
