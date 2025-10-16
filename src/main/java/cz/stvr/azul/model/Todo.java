@@ -20,13 +20,17 @@ public class Todo {
     private LocalDate dueDate;
 
     // getters and setters
+    public Long getId() { return id; }
+
     public void setCompleted(boolean completed) { this.completed = completed; }
     public boolean getCompleted() { return completed; }
 
     public void setTitle(String title) { this.title = title; }
     public String getTitle() { return title; }
+
     public void setDescription(String description) { this.description = description; }
     public String getDescription() { return description; }
+
     public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
     public LocalDate getDueDate() { return dueDate; }
 }
