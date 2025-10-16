@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// REST API controller
 @RestController
 @RequestMapping("/api/todos")
 public class TodoRestController {
@@ -21,6 +22,9 @@ public class TodoRestController {
         this.service = ts;
     }
 
+    // CRUD operations
+
+    // GET /api/todos
     @GetMapping
     public List<TodoResponse> list() {
         return service.list().stream()
@@ -28,6 +32,7 @@ public class TodoRestController {
                 .collect(Collectors.toList());
     }
 
+    // GET /api/todos/{id}
     @GetMapping("/{id}")
     public TodoResponse getById(@PathVariable Long id) {
         return service.findById(id)
@@ -35,6 +40,7 @@ public class TodoRestController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    // Create - POST /api/todos
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TodoResponse create(@Valid @RequestBody TodoRequest request) {
@@ -42,6 +48,7 @@ public class TodoRestController {
         return TodoResponse.fromEntity(todo);
     }
 
+    // Update - PUT /api/todos/{id}
     @PutMapping("/{id}")
     public TodoResponse update(@PathVariable Long id,
                                @Valid @RequestBody TodoRequest request) {
@@ -49,12 +56,14 @@ public class TodoRestController {
         return TodoResponse.fromEntity(todo);
     }
 
+    // PATCH /api/todos/{id}/complete?completed=true
     @PatchMapping("/{id}/complete")
     public TodoResponse toggleCompletion(@PathVariable Long id, @RequestParam boolean completed) {
         Todo todo = service.setCompletion(id, completed);
         return TodoResponse.fromEntity(todo);
     }
 
+    // DELETE /api/todos/{id}
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {

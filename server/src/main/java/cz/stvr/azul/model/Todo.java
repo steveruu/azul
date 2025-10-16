@@ -3,17 +3,17 @@ package cz.stvr.azul.model;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity
+@Entity // attribute [Table] v C#
 @Table(name = "todos")
 public class Todo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id // PK
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-increment (pro H2 ?)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false) // NOT NULL
     private String title;
 
-    @Column(length = 1000)
+    @Column(length = 1000) // VARCHAR(1000)
     private String description;
 
     private boolean completed;
