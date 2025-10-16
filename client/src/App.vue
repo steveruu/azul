@@ -176,27 +176,27 @@ onMounted(() => {
 <template>
   <div class="app-container">
     <header class="header">
-      <h1>📝 Todo Manager</h1>
+      <h1>Tasks</h1>
       <button @click="startCreate" class="btn btn-primary" :disabled="isCreating">
-        ➕ New Todo
+        + New Task
       </button>
     </header>
 
     <div v-if="error" class="error-message">
-      ⚠️ {{ error }}
-      <button @click="error = null" class="close-btn">✖</button>
+      {{ error }}
+      <button @click="error = null" class="close-btn">×</button>
     </div>
 
     <!-- Create Form -->
     <div v-if="isCreating" class="form-container">
-      <h2>Create New Todo</h2>
+      <h2>Create Task</h2>
       <form @submit.prevent="createTodo">
         <div class="form-group">
-          <label>Title *</label>
+          <label>Title</label>
           <input 
             v-model="newTodo.title" 
             type="text" 
-            placeholder="Enter todo title"
+            placeholder="Enter task title"
             required
           />
         </div>
@@ -204,7 +204,7 @@ onMounted(() => {
           <label>Description</label>
           <textarea 
             v-model="newTodo.description" 
-            placeholder="Enter description (max 1000 characters)"
+            placeholder="Add details about this task..."
             maxlength="1000"
           ></textarea>
         </div>
@@ -217,7 +217,7 @@ onMounted(() => {
         </div>
         <div class="form-actions">
           <button type="submit" class="btn btn-success" :disabled="loading">
-            {{ loading ? 'Creating...' : 'Create' }}
+            {{ loading ? 'Creating...' : 'Create Task' }}
           </button>
           <button type="button" @click="cancelCreate" class="btn btn-secondary" :disabled="loading">
             Cancel
@@ -228,14 +228,14 @@ onMounted(() => {
 
     <!-- Edit Form -->
     <div v-if="editingTodo" class="form-container">
-      <h2>Edit Todo</h2>
+      <h2>Edit Task</h2>
       <form @submit.prevent="updateTodo">
         <div class="form-group">
-          <label>Title *</label>
+          <label>Title</label>
           <input 
             v-model="editingTodo.title" 
             type="text" 
-            placeholder="Enter todo title"
+            placeholder="Enter task title"
             required
           />
         </div>
@@ -243,7 +243,7 @@ onMounted(() => {
           <label>Description</label>
           <textarea 
             v-model="editingTodo.description" 
-            placeholder="Enter description (max 1000 characters)"
+            placeholder="Add details about this task..."
             maxlength="1000"
           ></textarea>
         </div>
@@ -256,7 +256,7 @@ onMounted(() => {
         </div>
         <div class="form-actions">
           <button type="submit" class="btn btn-success" :disabled="loading">
-            {{ loading ? 'Updating...' : 'Update' }}
+            {{ loading ? 'Updating...' : 'Save Changes' }}
           </button>
           <button type="button" @click="cancelEdit" class="btn btn-secondary" :disabled="loading">
             Cancel
@@ -268,11 +268,11 @@ onMounted(() => {
     <!-- Todos List -->
     <div class="todos-container">
       <div v-if="loading && todos.length === 0" class="loading">
-        Loading todos...
+        Loading tasks...
       </div>
 
       <div v-else-if="todos.length === 0" class="empty-state">
-        <p>No todos yet. Create your first one!</p>
+        <p>No tasks yet. Create your first one.</p>
       </div>
 
       <div v-else class="todos-grid">
@@ -304,19 +304,20 @@ onMounted(() => {
                 class="btn-icon delete"
                 title="Delete"
               >
-                🗑
+                ×
               </button>
             </div>
           </div>
           
-          <p class="todo-description">{{ todo.description || 'No description' }}</p>
+          <p class="todo-description">{{ todo.description || 'No description provided' }}</p>
           
           <div class="todo-footer">
             <span v-if="todo.dueDate" class="due-date">
-              📅 {{ new Date(todo.dueDate).toLocaleDateString() }}
+              {{ new Date(todo.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }}
             </span>
+            <span v-else class="due-date">No due date</span>
             <span class="status-badge" :class="todo.completed ? 'completed' : 'pending'">
-              {{ todo.completed ? 'Completed' : 'Pending' }}
+              {{ todo.completed ? 'Done' : 'Active' }}
             </span>
           </div>
         </div>
@@ -326,244 +327,304 @@ onMounted(() => {
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap');
+
 * {
   box-sizing: border-box;
 }
 
 .app-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  padding: 40px 24px;
+  font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #000000;
+  min-height: 100vh;
+  color: #ffffff;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid #e0e0e0;
+  margin-bottom: 48px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #222222;
 }
 
 .header h1 {
   margin: 0;
-  color: #333;
-  font-size: 2rem;
+  color: #ffffff;
+  font-size: 2.5rem;
+  font-weight: 300;
+  letter-spacing: -0.02em;
 }
 
 .error-message {
-  background-color: #fee;
-  border: 1px solid #fcc;
-  color: #c33;
-  padding: 15px;
+  background-color: #1a1a1a;
+  border: 1px solid #333333;
+  color: #ff4444;
+  padding: 16px 20px;
   border-radius: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 0.9rem;
+  font-weight: 400;
 }
 
 .close-btn {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.2rem;
-  color: #c33;
-  padding: 0 5px;
+  font-size: 1.1rem;
+  color: #ff4444;
+  padding: 0 8px;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.close-btn:hover {
+  opacity: 1;
 }
 
 .form-container {
-  background: #f8f9fa;
-  padding: 25px;
+  background: #0a0a0a;
+  padding: 32px;
   border-radius: 12px;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+  border: 1px solid #1a1a1a;
 }
 
 .form-container h2 {
   margin-top: 0;
-  color: #333;
+  margin-bottom: 24px;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: #555;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #cccccc;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-  font-family: inherit;
+  padding: 14px 16px;
+  border: 1px solid #222222;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: 'Geist', inherit;
+  background: #000000;
+  color: #ffffff;
+  transition: border-color 0.2s;
+  font-weight: 400;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #ffffff;
 }
 
 .form-group textarea {
-  min-height: 100px;
+  min-height: 120px;
   resize: vertical;
+  line-height: 1.6;
 }
 
 .form-actions {
   display: flex;
-  gap: 10px;
+  gap: 12px;
+  margin-top: 28px;
 }
 
 .btn {
-  padding: 10px 20px;
+  padding: 12px 28px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 600;
-  transition: all 0.3s;
+  font-weight: 500;
+  transition: all 0.2s;
+  font-family: 'Geist', inherit;
+  letter-spacing: 0.01em;
 }
 
 .btn:disabled {
-  opacity: 0.6;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 .btn-primary {
-  background-color: #007bff;
-  color: white;
+  background-color: #ffffff;
+  color: #000000;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: #e6e6e6;
 }
 
 .btn-success {
-  background-color: #28a745;
-  color: white;
+  background-color: #ffffff;
+  color: #000000;
 }
 
 .btn-success:hover:not(:disabled) {
-  background-color: #218838;
+  background-color: #e6e6e6;
 }
 
 .btn-secondary {
-  background-color: #6c757d;
-  color: white;
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid #333333;
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: #5a6268;
+  border-color: #666666;
 }
 
 .loading, .empty-state {
   text-align: center;
-  padding: 40px;
-  color: #666;
-  font-size: 1.1rem;
+  padding: 60px 20px;
+  color: #666666;
+  font-size: 1rem;
+  font-weight: 400;
 }
 
 .todos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
   gap: 20px;
 }
 
 .todo-card {
-  background: white;
-  border: 2px solid #e0e0e0;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
   border-radius: 12px;
-  padding: 20px;
-  transition: all 0.3s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  transition: border-color 0.2s;
 }
 
 .todo-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
+  border-color: #2a2a2a;
 }
 
 .todo-card.completed {
-  opacity: 0.7;
-  background: #f8f9fa;
+  opacity: 0.5;
+}
+
+.todo-card.completed .todo-header h3 {
+  text-decoration: line-through;
+  opacity: 0.6;
 }
 
 .todo-header {
   display: flex;
   justify-content: space-between;
   align-items: start;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  gap: 16px;
 }
 
 .todo-header h3 {
   margin: 0;
-  color: #333;
-  font-size: 1.2rem;
+  color: #ffffff;
+  font-size: 1.125rem;
+  font-weight: 500;
   flex: 1;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
 }
 
 .todo-actions {
   display: flex;
-  gap: 8px;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
 .btn-icon {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.2rem;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: all 0.2s;
+  font-size: 1.1rem;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.2s;
+  color: #999999;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-icon:hover {
-  background: #f0f0f0;
+  background: #1a1a1a;
+  color: #ffffff;
 }
 
 .btn-icon.delete:hover {
-  background: #fee;
-  color: #c33;
+  background: #1a0a0a;
+  color: #ff4444;
 }
 
 .todo-description {
-  color: #666;
-  margin: 12px 0;
-  line-height: 1.5;
-  min-height: 40px;
+  color: #999999;
+  margin: 0 0 16px 0;
+  line-height: 1.6;
+  min-height: 48px;
+  font-size: 0.9375rem;
+  font-weight: 400;
 }
 
 .todo-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px solid #e0e0e0;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #1a1a1a;
 }
 
 .due-date {
-  font-size: 0.9rem;
-  color: #666;
+  font-size: 0.8125rem;
+  color: #666666;
+  font-weight: 500;
+  letter-spacing: 0.01em;
 }
 
 .status-badge {
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .status-badge.completed {
-  background: #d4edda;
-  color: #155724;
+  background: #0f1f0f;
+  color: #4ade80;
+  border: 1px solid #1a2a1a;
 }
 
 .status-badge.pending {
-  background: #fff3cd;
-  color: #856404;
+  background: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #2a2a2a;
 }
 </style>
