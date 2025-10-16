@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+// v .NET by to bylo soucasti ApplicationDbContext
 @Service
 @Transactional
 public class TodoService {
